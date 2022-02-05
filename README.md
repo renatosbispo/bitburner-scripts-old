@@ -8,4 +8,4 @@ Bitburner is a programming-based incremental game where you can write scripts in
 
 These are the scripts I'm currently using in the game.
 
-[Check out the game repo!](https://github.com/danielyxie/bitburner)
+[**Check out the game repo.**](https://github.com/danielyxie/bitburner)
