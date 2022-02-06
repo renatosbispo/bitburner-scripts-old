@@ -79,6 +79,4 @@ function getHackableServers(ns) {
   return hackableServers;
 }
 
-export async function main(ns) {
-  console.log(getHackableServers(ns));
-}
+export async function main(ns) {}
