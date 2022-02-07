@@ -53,6 +53,41 @@ function getAvailablePortOpeners(ns) {
   return portOpeners.filter(({ filename }) => ns.fileExists(filename, 'home'));
 }
 
+function getBestHackableServer(ns, hackableServers) {
+  const getServerScore = (server) => {
+    const { hackDifficulty, hostname, moneyMax } = server;
+    const hackTime = ns.getHackTime(hostname);
+    const growTime = ns.getGrowTime(hostname);
+    const weakenTime = ns.getWeakenTime(hostname);
+
+    const score =
+      moneyMax / (hackDifficulty * hackTime * growTime * weakenTime);
+
+    return score;
+  };
+
+  const bestHackableServer = hackableServers.reduce(
+    (serverWithGreatestMoneyMax, currentServer) => {
+      const serverWithGreatestMoneyMaxScore = getServerScore(
+        serverWithGreatestMoneyMax
+      );
+
+      const currentServerScore = getServerScore(currentServer);
+
+      console.log(
+        `${currentServer.hostname} score: ${getServerScore(currentServer)}`
+      );
+      if (currentServerScore > serverWithGreatestMoneyMaxScore) {
+        return currentServer;
+      }
+
+      return serverWithGreatestMoneyMax;
+    }
+  );
+
+  return bestHackableServer;
+}
+
 function getHackableServers(ns) {
   const isHackableServer = (server) => {
     const {
@@ -79,4 +114,10 @@ function getHackableServers(ns) {
   return hackableServers;
 }
 
-export async function main(ns) {}
+export async function main(ns) {
+  const hackableServers = getHackableServers(ns);
+
+  const bestHackableServer = getBestHackableServer(ns, hackableServers);
+  // console.log('hackableServers', hackableServers);
+  // console.log(bestHackableServer);
+}
