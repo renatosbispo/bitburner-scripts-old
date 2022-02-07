@@ -74,9 +74,6 @@ function getBestHackableServer(ns, hackableServers) {
 
       const currentServerScore = getServerScore(currentServer);
 
-      console.log(
-        `${currentServer.hostname} score: ${getServerScore(currentServer)}`
-      );
       if (currentServerScore > serverWithGreatestMoneyMaxScore) {
         return currentServer;
       }
@@ -118,6 +115,4 @@ export async function main(ns) {
   const hackableServers = getHackableServers(ns);
 
   const bestHackableServer = getBestHackableServer(ns, hackableServers);
-  // console.log('hackableServers', hackableServers);
-  // console.log(bestHackableServer);
 }
