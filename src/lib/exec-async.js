@@ -1,7 +1,13 @@
 /** @param {import("..").NS } ns */
 
 export default async function execAsync(ns, portNumber, ...execArgs) {
-  ns.exec(...execArgs);
+  const pid = ns.exec(...execArgs);
+
+  if (!pid) {
+    const error = ns.getScriptLogs().pop();
+
+    return { error };
+  }
 
   const port = ns.getPortHandle(portNumber);
 
@@ -18,5 +24,5 @@ export default async function execAsync(ns, portNumber, ...execArgs) {
     data = response;
   }
 
-  return data;
+  return { data };
 }
