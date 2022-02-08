@@ -1,18 +1,41 @@
 /** @param {import("..").NS } ns */
 
+function isObject(value) {
+  return typeof value === 'object' && !Array.isArray(value) && value !== null;
+}
 export default class ExecAsync {
   constructor(ns, portNumber) {
     this.ns = ns;
     this.portNumber = portNumber;
-
-    this.execAsync = this.execAsync.bind(this);
   }
 
-  async execAsync(...execArgs) {
+  #isFirstExecAsyncCall = true;
+
+  execAsync = async (...execArgs) => {
+    const [scriptToExecute, destination] = execArgs;
+
+    if (this.#isFirstExecAsyncCall) {
+      this.#isFirstExecAsyncCall = false;
+
+      const { error } = await this.execAsync(
+        '/scripts/scp.js',
+        'home',
+        1,
+        this.portNumber,
+        scriptToExecute,
+        destination
+      );
+
+      if (error) {
+        return { error };
+      }
+    }
+
     const pid = this.ns.exec(...execArgs);
 
     if (!pid) {
-      const error = this.ns.getScriptLogs().pop();
+      const errorMessage = this.ns.getScriptLogs().pop();
+      const error = new Error(errorMessage);
 
       return { error };
     }
@@ -24,14 +47,33 @@ export default class ExecAsync {
     }
 
     const response = port.read();
-    let data;
 
     try {
-      data = JSON.parse(response);
-    } catch (_) {
-      data = response;
-    }
+      const parsedResponse = JSON.parse(response);
 
-    return { data };
-  }
+      if (!isObject(parsedResponse)) {
+        const error = new Error('Script response is not an object.');
+
+        return { error };
+      }
+
+      if ('data' in parsedResponse) {
+        return { data: parsedResponse.data };
+      }
+
+      if ('error' in parsedResponse) {
+        return { error: parsedResponse.error };
+      }
+
+      const error = new Error(
+        'No data and no error property in script response.'
+      );
+
+      return { error };
+    } catch (_) {
+      const error = new Error('Script response is not valid JSON.');
+
+      return { error };
+    }
+  };
 }
