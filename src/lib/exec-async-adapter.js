@@ -1,6 +1,5 @@
-/** @param {NS} ns **/
-
 export default class ExecAsyncAdapter {
+  /** @param {import("..").NS } ns */
   constructor(ns, portNumber) {
     this.ns = ns;
     this.portNumber = portNumber;

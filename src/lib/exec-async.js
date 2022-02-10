@@ -1,9 +1,8 @@
-/** @param {import("..").NS } ns */
-
 function isObject(value) {
   return typeof value === 'object' && !Array.isArray(value) && value !== null;
 }
 export default class ExecAsync {
+  /** @param {import("..").NS } ns */
   constructor(ns, portNumber) {
     this.ns = ns;
     this.portNumber = portNumber;

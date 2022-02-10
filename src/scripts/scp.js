@@ -1,7 +1,6 @@
-/** @param {import("..").NS } ns */
-
 import ExecAsyncAdapater from '/lib/exec-async-adapter.js';
 
+/** @param {import("..").NS } ns */
 export async function main(ns) {
   const [portNumber, ...scpArgs] = ns.args;
   const { adapt } = new ExecAsyncAdapater(ns, portNumber);
