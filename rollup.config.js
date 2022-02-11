@@ -1,4 +1,5 @@
 import fs from 'fs';
+import commonjs from '@rollup/plugin-commonjs';
 import nodeResolve from '@rollup/plugin-node-resolve';
 
 const config = [];
@@ -11,7 +12,7 @@ function addFileToConfig(path) {
       file: path.replace('/src/', '/dist/'),
       format: 'esm',
     },
-    plugins: [nodeResolve()],
+    plugins: [commonjs(), nodeResolve()],
     watch: {
       include: `${__dirname}/src/**`,
     },
