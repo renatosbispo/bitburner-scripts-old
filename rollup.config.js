@@ -13,7 +13,7 @@ function addFileToConfig(path) {
     },
     plugins: [nodeResolve()],
     watch: {
-      include: path,
+      include: `${__dirname}/src/**`,
     },
     treeshake: 'recommended',
   });
