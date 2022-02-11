@@ -4,11 +4,6 @@ import nodeResolve from '@rollup/plugin-node-resolve';
 const config = [];
 const buildTargetDirPath = `${__dirname}/src/scripts`;
 
-const buildTargetFiles = fs.readdirSync(`${buildTargetDirPath}`, {
-  encoding: 'utf8',
-  withFileTypes: true,
-});
-
 function addFileToConfig(path) {
   config.push({
     input: path,
@@ -24,10 +19,21 @@ function addFileToConfig(path) {
   });
 }
 
-buildTargetFiles.forEach((file) => {
-  if (file.isFile() && file.name.endsWith('.js')) {
-    addFileToConfig(`${buildTargetDirPath}/${file.name}`);
-  }
-});
+function addFilesToConfig(dirPath) {
+  const dirEntries = fs.readdirSync(`${dirPath}`, {
+    encoding: 'utf8',
+    withFileTypes: true,
+  });
+
+  dirEntries.forEach((dirEntry) => {
+    if (dirEntry.isFile() && dirEntry.name.endsWith('.js')) {
+      addFileToConfig(`${dirPath}/${dirEntry.name}`);
+    } else if (dirEntry.isDirectory()) {
+      addFilesToConfig(`${dirPath}/${dirEntry.name}`);
+    }
+  });
+}
+
+addFilesToConfig(buildTargetDirPath);
 
 export default config;
