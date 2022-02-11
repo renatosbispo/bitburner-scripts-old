@@ -1,6 +1,3 @@
-function isObject(value) {
-  return typeof value === 'object' && !Array.isArray(value) && value !== null;
-}
 export default class ExecAsync {
   /** @param {import("..").NS } ns */
   constructor(ns, portNumber) {
@@ -75,4 +72,8 @@ export default class ExecAsync {
       return { error };
     }
   };
+}
+
+function isObject(value) {
+  return typeof value === 'object' && !Array.isArray(value) && value !== null;
 }
