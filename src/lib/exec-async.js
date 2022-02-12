@@ -29,7 +29,7 @@ export default class ExecAsync {
     const port = this.ns.getPortHandle(this.portNumber);
 
     while (port.empty()) {
-      await this.ns.sleep(1000);
+      await this.ns.sleep(1);
     }
 
     const response = port.read();
