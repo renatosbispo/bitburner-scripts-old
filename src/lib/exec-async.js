@@ -5,26 +5,16 @@ export default class ExecAsync {
     this.portNumber = portNumber;
   }
 
-  #isFirstExecAsyncCall = true;
-
   execAsync = async (...execArgs) => {
     const [scriptToExecute, destination] = execArgs;
 
-    if (this.#isFirstExecAsyncCall) {
-      this.#isFirstExecAsyncCall = false;
+    const successfullyCopied = await this.ns.scp(scriptToExecute, destination);
 
-      const { error } = await this.execAsync(
-        '/scripts/scp.js',
-        'home',
-        1,
-        this.portNumber,
-        scriptToExecute,
-        destination
-      );
+    if (!successfullyCopied) {
+      const errorMessage = ns.getScriptLogs().pop();
+      const error = new Error(errorMessage);
 
-      if (error) {
-        return { error };
-      }
+      return { error };
     }
 
     const pid = this.ns.exec(...execArgs);
