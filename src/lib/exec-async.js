@@ -7,11 +7,10 @@ export default class ExecAsync {
 
   execAsync = async (...execArgs) => {
     const [scriptToExecute, destination] = execArgs;
-
     const successfullyCopied = await this.ns.scp(scriptToExecute, destination);
 
     if (!successfullyCopied) {
-      const errorMessage = ns.getScriptLogs().pop();
+      const errorMessage = this.ns.getScriptLogs().pop();
       const error = new Error(errorMessage);
 
       throw error;
