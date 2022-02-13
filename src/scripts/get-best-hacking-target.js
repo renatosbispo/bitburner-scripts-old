@@ -1,9 +1,9 @@
-import ExecAsyncAdapter from '../lib/exec-async-adapter';
+import ScpExecAdapter from '../lib/scp-exec-adapter';
 
 /** @param {import("..").NS } ns */
 export async function main(ns) {
-  const [portNumber, ...serversHostnames] = ns.args;
-  const { adapt } = new ExecAsyncAdapter(ns, portNumber);
+  const [responsePortNumber, ...serversHostnames] = ns.args;
+  const { adapt } = new ScpExecAdapter(ns, responsePortNumber);
 
   await adapt(async () => {
     const filterdServersHostnames = serversHostnames.filter(

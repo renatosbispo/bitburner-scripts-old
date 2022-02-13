@@ -1,18 +1,22 @@
-export default class ExecAsyncAdapter {
+export default class ScpExecAdapter {
   /** @param {import("..").NS } ns */
-  constructor(ns, portNumber) {
+  constructor(ns, responsePortNumber) {
     this.ns = ns;
-    this.portNumber = portNumber;
+    this.responsePortNumber = responsePortNumber;
   }
 
   adapt = async (script) => {
     try {
       const scriptResponse = await script();
+
       const serializedScriptResponse = JSON.stringify({
         data: scriptResponse === undefined ? null : scriptResponse,
       });
 
-      await this.ns.writePort(this.portNumber, serializedScriptResponse);
+      await this.ns.writePort(
+        this.responsePortNumber,
+        serializedScriptResponse
+      );
     } catch (error) {
       let serializedScriptResponse;
 
@@ -25,7 +29,10 @@ export default class ExecAsyncAdapter {
         serializedScriptResponse = JSON.stringify({ error });
       }
 
-      await this.ns.writePort(this.portNumber, serializedScriptResponse);
+      await this.ns.writePort(
+        this.responsePortNumber,
+        serializedScriptResponse
+      );
     }
   };
 }

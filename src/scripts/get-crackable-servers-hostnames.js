@@ -1,10 +1,10 @@
-import ExecAsyncAdapter from '../lib/exec-async-adapter';
+import ScpExecAdapter from '../lib/scp-exec-adapter';
 import PortOpenersManager from '../lib/port-openers-manager';
 
 /** @param {import("..").NS } ns */
 export async function main(ns) {
-  const [portNumber, ...serversHostnames] = ns.args;
-  const { adapt } = new ExecAsyncAdapter(ns, portNumber);
+  const [responsePortNumber, ...serversHostnames] = ns.args;
+  const { adapt } = new ScpExecAdapter(ns, responsePortNumber);
   const { getAvailablePortOpeners } = new PortOpenersManager(ns);
 
   await adapt(async () => {

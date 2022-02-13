@@ -1,11 +1,11 @@
-export default class ExecAsync {
+export default class ScpExec {
   /** @param {import("..").NS } ns */
-  constructor(ns, portNumber) {
+  constructor(ns, responsePortNumber) {
     this.ns = ns;
-    this.portNumber = portNumber;
+    this.responsePortNumber = responsePortNumber;
   }
 
-  execAsync = async (...execArgs) => {
+  #scpExec = async (...execArgs) => {
     const [scriptToExecute, destination] = execArgs;
     const successfullyCopied = await this.ns.scp(scriptToExecute, destination);
 
@@ -24,11 +24,15 @@ export default class ExecAsync {
 
       throw error;
     }
+  };
 
-    const port = this.ns.getPortHandle(this.portNumber);
+  scpExec = async (...execArgs) => {
+    await this.#scpExec(...execArgs);
+
+    const port = this.ns.getPortHandle(this.responsePortNumber);
 
     while (port.empty()) {
-      await this.ns.sleep(1);
+      await this.ns.sleep(50);
     }
 
     const response = port.read();
@@ -70,9 +74,11 @@ export default class ExecAsync {
       throw error;
     }
 
-    throw new Error(
-      'No data and no error property in script response.'
-    );
+    throw new Error('No data and no error property in script response.');
+  };
+
+  scpExecVoid = async (...execArgs) => {
+    await this.#scpExec(...execArgs);
   };
 }
 
