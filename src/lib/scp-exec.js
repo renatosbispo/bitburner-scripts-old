@@ -29,6 +29,9 @@ export default class ScpExec {
   scpExec = async (...execArgs) => {
     await this.#scpExec(...execArgs);
 
+    const [scriptToExecute, destination] = execArgs;
+    const scriptAtDestination = `${scriptToExecute}@${destination}`;
+
     const port = this.ns.getPortHandle(this.responsePortNumber);
 
     while (port.empty()) {
@@ -42,13 +45,17 @@ export default class ScpExec {
     try {
       parsedResponse = JSON.parse(response);
     } catch (_) {
-      const error = new Error('Script response is not valid JSON.');
+      const error = new Error(
+        `Response from ${scriptAtDestination} is not valid JSON.`
+      );
 
       throw error;
     }
 
     if (!isObject(parsedResponse)) {
-      const error = new Error('Script response is not an object.');
+      const error = new Error(
+        `Response from ${scriptAtDestination} is not an object.`
+      );
 
       throw error;
     }
@@ -74,7 +81,9 @@ export default class ScpExec {
       throw error;
     }
 
-    throw new Error('No data and no error property in script response.');
+    throw new Error(
+      `Response from ${scriptAtDestination} has no data and no error property.`
+    );
   };
 
   scpExecVoid = async (...execArgs) => {
