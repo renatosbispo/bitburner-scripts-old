@@ -11,12 +11,12 @@ export async function main(ns) {
     const serversHostnames = JSON.parse(serializedServersHostnames);
     const availablePortOpeners = getAvailablePortOpeners();
 
-    const crackableServers = serversHostnames.filter((serverHostname) => {
+    const crackableServersHostnames = serversHostnames.filter((serverHostname) => {
       const numPortsRequired = ns.getServerNumPortsRequired(serverHostname);
 
       return availablePortOpeners.length >= numPortsRequired;
     });
 
-    return crackableServers;
+    return crackableServersHostnames;
   });
 }
