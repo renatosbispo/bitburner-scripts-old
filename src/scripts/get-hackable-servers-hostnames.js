@@ -3,7 +3,6 @@ import ExecAsyncAdapter from '../lib/exec-async-adapter';
 /** @param {import("..").NS } ns */
 export async function main(ns) {
   const [portNumber, serializedServersHostnames] = ns.args;
-
   const { adapt } = new ExecAsyncAdapter(ns, portNumber);
 
   await adapt(async () => {
